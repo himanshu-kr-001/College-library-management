@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Add Student - Sityog Library Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1><i class="fas fa-user-plus me-2"></i>Add New Student</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('students') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Students
+        </a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user me-2"></i>Student Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="student_id" class="form-label">Student ID *</label>
+                                <input type="text" class="form-control" id="student_id" name="student_id" 
+                                       required placeholder="Enter student ID (e.g., STU001)">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" 
+                                       required placeholder="Enter student's full name">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       required placeholder="Enter email address">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       placeholder="Enter phone number">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" name="address" 
+                                       placeholder="Enter address">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Book Details Section -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5><i class="fas fa-book me-2"></i>Book Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="book_title" class="form-label">Book Title</label>
+                                        <input type="text" class="form-control" id="book_title" name="book_title" 
+                                               placeholder="Enter book title">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="book_author" class="form-label">Book Author</label>
+                                        <input type="text" class="form-control" id="book_author" name="book_author" 
+                                               placeholder="Enter book author">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="book_isbn" class="form-label">ISBN Number</label>
+                                        <input type="text" class="form-control" id="book_isbn" name="book_isbn" 
+                                               placeholder="Enter ISBN number">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="book_category" class="form-label">Book Category</label>
+                                        <select class="form-control" id="book_category" name="book_category">
+                                            <option value="">Select category</option>
+                                            <option value="Fiction">Fiction</option>
+                                            <option value="Non-Fiction">Non-Fiction</option>
+                                            <option value="Science">Science</option>
+                                            <option value="Technology">Technology</option>
+                                            <option value="History">History</option>
+                                            <option value="Biography">Biography</option>
+                                            <option value="Reference">Reference</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="book_price" class="form-label">Book Price</label>
+                                        <input type="number" class="form-control" id="book_price" name="book_price" 
+                                               step="0.01" min="0" placeholder="Enter book price">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="book_description" class="form-label">Book Description</label>
+                                        <textarea class="form-control" id="book_description" name="book_description" 
+                                                  rows="3" placeholder="Enter book description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('students') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Add Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>Guidelines</h5>
+            </div>
+            <div class="card-body">
+                <h6>Required Fields</h6>
+                <ul class="small">
+                    <li>Student ID - Unique student identifier (e.g., STU001)</li>
+                    <li>Full Name - Student's complete name</li>
+                    <li>Email - Valid email address</li>
+                    <li>Phone Number - Contact number (optional)</li>
+                    <li>Address - Residential address (optional)</li>
+                </ul>
+                
+                <h6>Book Details</h6>
+                <p class="small">
+                    You can optionally add book details when creating a student record.
+                    This helps track which books the student is interested in or currently reading.
+                </p>
+                <ul class="small">
+                    <li>Book Title - Name of the book</li>
+                    <li>Author - Book author name</li>
+                    <li>ISBN - Unique book identifier</li>
+                    <li>Category - Book classification</li>
+                    <li>Description - Brief book summary</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

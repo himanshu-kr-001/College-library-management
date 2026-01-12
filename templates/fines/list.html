@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Fines Management - Sityog Library Management{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1><i class="fas fa-indian-rupee-sign me-2"></i>Fines Management</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Fines Table -->
+<div class="card">
+    <div class="card-header">
+        <h5><i class="fas fa-list me-2"></i>All Fines</h5>
+    </div>
+    <div class="card-body">
+        {% if fines %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Student ID</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Book Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Return Date</th>
+                        <th>Days Late</th>
+                        <th>Fine Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fine in fines %}
+                    <tr>
+                        <td><strong>{{ fine.full_name }}</strong></td>
+                        <td><strong>STU-{{ "%04d"|format(fine.user_id) }}</strong></td>
+                        <td>{{ fine.email }}</td>
+                        <td>{{ fine.phone or '-' }}</td>
+                        <td>{{ fine.title }}</td>
+                        <td>{{ fine.author }}</td>
+                        <td>{{ fine.isbn }}</td>
+                        <td>{{ fine.issue_date[:10] if fine.issue_date else '-' }}</td>
+                        <td>{{ fine.due_date[:10] if fine.due_date else '-' }}</td>
+                        <td>{{ fine.return_date[:10] if fine.return_date else '-' }}</td>
+                        <td>{{ fine.days_late }}</td>
+                        <td class="text-danger">₹{{ fine.total_amount }}</td>
+                        <td>
+                            {% if fine.status == 'unpaid' %}
+                                <span class="badge bg-danger">Unpaid</span>
+                            {% elif fine.status == 'paid' %}
+                                <span class="badge bg-success">Paid</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ fine.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if fine.status == 'unpaid' %}
+                            <form method="POST" action="{{ url_for('pay_fine', fine_id=fine.id) }}" style="display: inline;">
+                                <button type="submit" class="btn btn-sm btn-success">Pay Fine</button>
+                            </form>
+                            {% else %}
+                            <span class="text-success">Paid</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="fas fa-indian-rupee-sign fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No fines found</h5>
+            <p class="text-muted">No fines have been issued yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ fines|selectattr('status', 'equalto', 'unpaid')|list|length }}</h4>
+                        <p class="card-text">Unpaid Fines</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">{{ fines|selectattr('status', 'equalto', 'paid')|list|length }}</h4>
+                        <p class="card-text">Paid Fines</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-check-circle fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h4 class="card-title">₹{{ fines|selectattr('status', 'equalto', 'unpaid')|map(attribute='total_amount')|list|sum|round(2) }}</h4>
+                        <p class="card-text">Total Unpaid</p>
+                    </div>
+                    <div class="align-self-center">
+                        <i class="fas fa-indian-rupee-sign fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

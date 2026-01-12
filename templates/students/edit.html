@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Student - Sityog Library Management{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1><i class="fas fa-user-edit me-2"></i>Edit Student</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('students') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Students
+        </a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-user me-2"></i>Edit Student Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="student_id" class="form-label">Student ID</label>
+                                <input type="text" class="form-control" id="student_id" name="student_id" 
+                                       value="{{ student.student_id or '' }}" placeholder="Enter student ID (e.g., STU001)">
+                                <div class="form-text">Leave blank to auto-generate or modify existing ID</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">Full Name *</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" 
+                                       value="{{ student.full_name }}" required placeholder="Enter student's full name">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" 
+                                       value="{{ student.username }}" readonly>
+                                <div class="form-text">Username cannot be changed</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="{{ student.email }}" required placeholder="Enter email address">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone" 
+                                       value="{{ student.phone or '' }}" placeholder="Enter phone number">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address" name="address" 
+                                       value="{{ student.address or '' }}" placeholder="Enter address">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="user_type" class="form-label">User Type</label>
+                                <select class="form-select" id="user_type" name="user_type">
+                                    <option value="student" {% if student.user_type == 'student' %}selected{% endif %}>Student</option>
+                                    <option value="admin" {% if student.user_type == 'admin' %}selected{% endif %}>Admin</option>
+                                </select>
+                                <div class="form-text">Only admin can change user type</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Account Status</label>
+                                <div class="form-control-plaintext">
+                                    {% if student.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Inactive</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('students') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Update Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>Current Student Info</h5>
+            </div>
+            <div class="card-body">
+                <h6>Personal Information</h6>
+                <ul class="small">
+                    <li><strong>Student ID:</strong> {{ student.student_id or 'Not assigned' }}</li>
+                    <li><strong>Name:</strong> {{ student.full_name }}</li>
+                    <li><strong>Username:</strong> {{ student.username }}</li>
+                    <li><strong>Email:</strong> {{ student.email }}</li>
+                    <li><strong>Phone:</strong> {{ student.phone or 'Not provided' }}</li>
+                    <li><strong>Address:</strong> {{ student.address or 'Not provided' }}</li>
+                    <li><strong>User Type:</strong> 
+                        {% if student.user_type == 'admin' %}
+                        <span class="badge bg-primary">Admin</span>
+                        {% else %}
+                        <span class="badge bg-info">Student</span>
+                        {% endif %}
+                    </li>
+                </ul>
+                
+                <h6>Account Details</h6>
+                <ul class="small">
+                    <li><strong>Member Since:</strong> {{ student.created_at[:10] if student.created_at else 'Unknown' }}</li>
+                    <li><strong>Status:</strong> 
+                        {% if student.is_active %}
+                        <span class="badge bg-success">Active</span>
+                        {% else %}
+                        <span class="badge bg-danger">Inactive</span>
+                        {% endif %}
+                    </li>
+                </ul>
+                
+                <h6>Activity Summary</h6>
+                <ul class="small">
+                    <li><strong>Username:</strong> {{ student.username }}</li>
+                    <li><strong>Account ID:</strong> {{ student.id }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Issue Book - Library Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1><i class="fas fa-hand-holding me-2"></i>Issue Book</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('transactions') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Transactions
+        </a>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-exchange-alt me-2"></i>Book Issue Details</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="book_id" class="form-label">Book *</label>
+                                <select class="form-select" id="book_id" name="book_id" required>
+                                    <option value="">Select a book</option>
+                                    {% for book in books %}
+                                    <option value="{{ book.id }}">{{ book.title }} - {{ book.author }} ({{ book.available_copies }} available)</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="user_id" class="form-label">User *</label>
+                                <select class="form-select" id="user_id" name="user_id" required>
+                                    <option value="">Select a user</option>
+                                    {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.full_name }} ({{ user.user_type }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="due_days" class="form-label">Due Period (days)</label>
+                                <input type="number" class="form-control" id="due_days" 
+                                       name="due_days" min="1" max="365" value="14">
+                                <div class="form-text">Standard period is 14 days</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="2" 
+                                          placeholder="Optional notes about this issue"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('transactions') }}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check me-2"></i>Issue Book
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Available Books -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6><i class="fas fa-book me-2"></i>Available Books</h6>
+            </div>
+            <div class="card-body">
+                {% if books %}
+                <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Available</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for book in books[:10] %}
+                            <tr>
+                                <td>
+                                    <small>{{ book.title }}</small><br>
+                                    <small class="text-muted">{{ book.author }}</small>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success">{{ book.available_copies }}</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if books|length > 10 %}
+                <small class="text-muted">Showing first 10 of {{ books|length }} available books</small>
+                {% endif %}
+                {% else %}
+                <p class="text-muted small">No books available for issue</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Active Users -->
+        <div class="card">
+            <div class="card-header">
+                <h6><i class="fas fa-users me-2"></i>Active Users</h6>
+            </div>
+            <div class="card-body">
+                {% if users %}
+                <div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users[:10] %}
+                            <tr>
+                                <td>
+                                    <small>{{ user.full_name }}</small><br>
+                                    <small class="text-muted">{{ user.username }}</small>
+                                </td>
+                                <td>
+                                    {% if user.user_type == 'admin' %}
+                                    <span class="badge bg-primary">Admin</span>
+                                    {% else %}
+                                    <span class="badge bg-info">Student</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if users|length > 10 %}
+                <small class="text-muted">Showing first 10 of {{ users|length }} active users</small>
+                {% endif %}
+                {% else %}
+                <p class="text-muted small">No active users found</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Issue Guidelines -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-info">
+            <div class="card-header bg-info text-white">
+                <h6><i class="fas fa-info-circle me-2"></i>Issue Guidelines</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Before Issuing:</h6>
+                        <ul class="small">
+                            <li>Verify the book is available (has copies)</li>
+                            <li>Check if user already has this book issued</li>
+                            <li>Confirm user account is active</li>
+                            <li>Set appropriate due period</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Due Period Guidelines:</h6>
+                        <ul class="small">
+                            <li>Standard: 14 days (2 weeks)</li>
+                            <li>Reference books: 7 days</li>
+                            <li>Popular books: 7 days</li>
+                            <li>Maximum: 365 days</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
