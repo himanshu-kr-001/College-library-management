@@ -11,10 +11,11 @@ from werkzeug.security import check_password_hash
 from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'library-management-secret-key'
+# Use environment variable for secret key in production
+app.secret_key = os.environ.get('SECRET_KEY', 'library-management-secret-key')
 
 # Database configuration
-DATABASE = os.path.join(os.path.dirname(__file__), 'library.db')
+DATABASE = os.environ.get('DATABASE_PATH', os.path.join(os.path.dirname(__file__), 'library.db'))
 
 _schema_checked = False
 

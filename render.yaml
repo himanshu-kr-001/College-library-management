@@ -1,0 +1,23 @@
+services:
+  # Web Service
+  - type: web
+    name: library-management
+    env: python
+    plan: free
+    buildCommand: "chmod +x build.sh && ./build.sh"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /tmp/library.db
+      - key: ADMIN_USERNAME
+        value: hk866311@gmail.com
+      - key: ADMIN_PASSWORD
+        value: Hacker@2004
+      - key: ADMIN_EMAIL
+        value: hk866311@gmail.com
